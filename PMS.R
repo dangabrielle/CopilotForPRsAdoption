@@ -96,22 +96,4 @@ for(i in 1:nrow(PSM_result)) {
 
 
 
-library("MatchIt")
-library("tidyverse")
-library("broom")
-library("magrittr")
-
-data <- read.csv("~/Documents/RStudio/PSMdata.csv")
-
-m_near <- matchit(formula = treatment ~ repositories + sponsoring + openedPRs + reviewedPRs + language + followers + organizations,
-                  data = data,
-                  method = "nearest",
-                  replace = TRUE)
-summary(m_near)
-matched_data <- match.data(m_near)
-matched_data
-PSM_result <- matched_data %>%
-  lm(sponsors ~ treatment + repositories + sponsoring + openedPRs + reviewedPRs + language + followers + organizations,
-     data = ., weights = weights) %>%
-  tidy()
 
