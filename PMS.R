@@ -16,13 +16,17 @@ contr_data$purpose <- ifelse(grepl("doc|copyright|license", contr_data$body, ign
                              ifelse(grepl("bug|fix|defect", contr_data$body, ignore.case = T), "Bug", "Feature"))
 contr_data['isGeneratedByCopliot'] <- FALSE
 
-round(colMeans(exper_data[ , unlist(lapply(exper_data, is.numeric))]),3)
-round(colMeans(contr_data[ , unlist(lapply(contr_data, is.numeric))]),3)
+round(sapply(exper_data[ , unlist(lapply(exper_data, is.numeric))], median),3)
+round(sapply(contr_data[ , unlist(lapply(contr_data, is.numeric))], median),3)
 unique_exper_data <- exper_data[!duplicated(exper_data[,c('repoName')]),]
-round(colMeans(unique_exper_data[ , unlist(lapply(unique_exper_data, is.numeric))]),3)
+round(sapply(unique_exper_data[ , unlist(lapply(unique_exper_data, is.numeric))],median),3)
 unique_contr_data <- contr_data[!duplicated(contr_data[,c('repoName')]),]
-round(colMeans(unique_contr_data[ , unlist(lapply(unique_contr_data, is.numeric))]),3)
+round(sapply(unique_contr_data[ , unlist(lapply(unique_contr_data, is.numeric))],median),3)
 data <- rbind(exper_data, contr_data)
+nrow(data[data$isMember == "True" & data$isGeneratedByCopliot == TRUE, ])
+nrow(data[data$isMember == "False" & data$isGeneratedByCopliot == TRUE, ])
+nrow(data[data$isMember == "True" & data$isGeneratedByCopliot == FALSE, ])
+nrow(data[data$isMember == "False" & data$isGeneratedByCopliot == FALSE, ])
 
 model_data <- data.frame(data$reviewTime, data$reviewersTotalCount, data$reviewersComments, data$authorComments,
                          data$commentsTotalCount, data$additions, data$deletions, data$prSize,
@@ -65,16 +69,32 @@ library("broom")
 library("magrittr")
 library("WeightIt")
 library("cobalt")
+library("MatchIt")
+m_near <- matchit(formula = isGeneratedByCopliot  ~  reviewersTotalCount + reviewersComments + authorComments + commentsTotalCount   +
+                    additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
+                    bodyLength + purpose + repoLanguage + forkCount + stargazerCount + repoAge + isMember,
+                  data = model_data,
+                  method = "nearest",
+                  replace = TRUE)
+summary(m_near)
+plot(m_near, type = "jitter", interactive = FALSE)
+plot(summary(m_near), abs = TRUE)
+
+library("cobalt")
+bal.tab(m_near,threshold=0.1)
+plot(bal.tab(m_near,threshold=0.1, un = TRUE), abs = TRUE)
+matched_data <- match.data(m_near)
+matched_data
 W.out <- weightit(isGeneratedByCopliot ~ reviewersTotalCount + reviewersComments + authorComments + commentsTotalCount   +
                     additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
                     bodyLength + purpose + repoLanguage + forkCount + stargazerCount + repoAge + isMember ,
-                  data = model_data, estimand = "ATT", method = "ebal")
+                  data = matched_data, estimand = "ATT", method = "ebal")
 W.out
 summary(W.out)
 bal.tab(W.out,threshold=0.1)
 plot(bal.tab(W.out,threshold=0.1, un = TRUE), abs = TRUE)
-model_data$weights <- W.out$weights
-PSM_result <- model_data %>%
+matched_data$weights <- W.out$weights
+PSM_result <- matched_data %>%
   lm(reviewTime ~ isGeneratedByCopliot +  
        reviewersTotalCount + reviewersComments + authorComments + commentsTotalCount   +
        additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
