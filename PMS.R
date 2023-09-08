@@ -23,10 +23,6 @@ round(sapply(unique_exper_data[ , unlist(lapply(unique_exper_data, is.numeric))]
 unique_contr_data <- contr_data[!duplicated(contr_data[,c('repoName')]),]
 round(sapply(unique_contr_data[ , unlist(lapply(unique_contr_data, is.numeric))],median),3)
 data <- rbind(exper_data, contr_data)
-nrow(data[data$isMember == "True" & data$isGeneratedByCopliot == TRUE, ])
-nrow(data[data$isMember == "False" & data$isGeneratedByCopliot == TRUE, ])
-nrow(data[data$isMember == "True" & data$isGeneratedByCopliot == FALSE, ])
-nrow(data[data$isMember == "False" & data$isGeneratedByCopliot == FALSE, ])
 
 model_data <- data.frame(data$reviewTime, data$reviewersTotalCount, data$reviewersComments, data$authorComments,
                          data$commentsTotalCount, data$additions, data$deletions, data$prSize,
@@ -69,37 +65,21 @@ library("broom")
 library("magrittr")
 library("WeightIt")
 library("cobalt")
-library("MatchIt")
-m_near <- matchit(formula = isGeneratedByCopliot  ~  reviewersTotalCount + reviewersComments + authorComments + commentsTotalCount   +
-                    additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
-                    bodyLength + purpose + repoLanguage + forkCount + stargazerCount + repoAge + isMember,
-                  data = model_data,
-                  method = "nearest",
-                  replace = TRUE)
-summary(m_near)
-plot(m_near, type = "jitter", interactive = FALSE)
-plot(summary(m_near), abs = TRUE)
-
-library("cobalt")
-bal.tab(m_near,threshold=0.1)
-plot(bal.tab(m_near,threshold=0.1, un = TRUE), abs = TRUE)
-matched_data <- match.data(m_near)
-matched_data
 W.out <- weightit(isGeneratedByCopliot ~ reviewersTotalCount + reviewersComments + authorComments + commentsTotalCount   +
                     additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
                     bodyLength + purpose + repoLanguage + forkCount + stargazerCount + repoAge + isMember ,
-                  data = matched_data, estimand = "ATT", method = "ebal")
+                  data = model_data, estimand = "ATT", method = "ebal")
 W.out
 summary(W.out)
 bal.tab(W.out,threshold=0.1)
 plot(bal.tab(W.out,threshold=0.1, un = TRUE), abs = TRUE)
-matched_data$weights <- W.out$weights
-PSM_result <- matched_data %>%
+
+PSM_result <- model_data %>%
   lm(reviewTime ~ isGeneratedByCopliot +  
        reviewersTotalCount + reviewersComments + authorComments + commentsTotalCount   +
        additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
        bodyLength + purpose + repoLanguage + forkCount + stargazerCount + repoAge + isMember ,
-     data = ., weights = weights) %>%
+     data = ., weights = W.out$weights) %>%
   tidy()
 
 print(n = 38,PSM_result)
@@ -112,26 +92,3 @@ for(i in 1:nrow(PSM_result)) {
   output <- paste(term, "&", estimate, "&", std_error, "&", p_value, "\\")
   print(output)
 }
-
-
-
-
-library("MatchIt")
-library("tidyverse")
-library("broom")
-library("magrittr")
-
-data <- read.csv("~/Documents/RStudio/PSMdata.csv")
-
-m_near <- matchit(formula = treatment ~ repositories + sponsoring + openedPRs + reviewedPRs + language + followers + organizations,
-                  data = data,
-                  method = "nearest",
-                  replace = TRUE)
-summary(m_near)
-matched_data <- match.data(m_near)
-matched_data
-PSM_result <- matched_data %>%
-  lm(sponsors ~ treatment + repositories + sponsoring + openedPRs + reviewedPRs + language + followers + organizations,
-     data = ., weights = weights) %>%
-  tidy()
-
