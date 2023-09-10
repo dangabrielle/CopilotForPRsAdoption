@@ -1,27 +1,10 @@
-library(readxl)
-library(rms)
-library(ggplot2)
 library(dplyr)
-set.seed(111)
-exper_data <- read.csv("LLMPRs.csv", header=TRUE, sep=",")
-exper_data <- subset(exper_data, isValid == 'True' & state %in% c('MERGED','CLOSED') & isGeneratedByBots == 'False')
-contr_data <- read.csv("control_prs_df.csv", header=TRUE, sep=",")
-contr_data <- subset(contr_data, state %in% c('MERGED','CLOSED') & isGeneratedByBots == 'False')
 
-exper_data$purpose <- ifelse(grepl("doc|copyright|license", exper_data$body, ignore.case = T), "Document", 
-                             ifelse(grepl("bug|fix|defect", exper_data$body, ignore.case = T), "Bug", "Feature"))
-exper_data = subset(exper_data, select = -c(isValid,firstEditedAtBycopilot4prs))
+exper_data <- read.csv("treatment_metrics.csv", header=TRUE, sep=",")
+contr_data <- read.csv("control_metrics.csv", header=TRUE, sep=",")
+
 exper_data['isGeneratedByCopliot'] <- TRUE
-contr_data$purpose <- ifelse(grepl("doc|copyright|license", contr_data$body, ignore.case = T), "Document", 
-                             ifelse(grepl("bug|fix|defect", contr_data$body, ignore.case = T), "Bug", "Feature"))
 contr_data['isGeneratedByCopliot'] <- FALSE
-
-round(sapply(exper_data[ , unlist(lapply(exper_data, is.numeric))], median),3)
-round(sapply(contr_data[ , unlist(lapply(contr_data, is.numeric))], median),3)
-unique_exper_data <- exper_data[!duplicated(exper_data[,c('repoName')]),]
-round(sapply(unique_exper_data[ , unlist(lapply(unique_exper_data, is.numeric))],median),3)
-unique_contr_data <- contr_data[!duplicated(contr_data[,c('repoName')]),]
-round(sapply(unique_contr_data[ , unlist(lapply(unique_contr_data, is.numeric))],median),3)
 data <- rbind(exper_data, contr_data)
 
 model_data <- data.frame(data$reviewTime, data$reviewersTotalCount, data$reviewersComments, data$authorComments,
@@ -49,16 +32,12 @@ names(model_data)[18] <- "repoAge"
 names(model_data)[19] <- "isMember"
 model_data$isMember <- as.integer(as.logical(model_data$isMember))
 model_data$reviewTime <- as.numeric(model_data$reviewTime)
-# Calculate the frequency of each value in the column
+
 value_counts <- table(model_data[["repoLanguage"]])
-print(order(value_counts, decreasing = TRUE))
-# Get the values that have frequency in the bottom 10
+
 top_values <- names(value_counts)[order(value_counts, decreasing = TRUE)][1:10]
-# Create a new column with values replaced by "Other" for bottom values
+
 model_data$repoLanguage <- ifelse(!(model_data[["repoLanguage"]] %in% top_values), "Other", model_data[["repoLanguage"]])
-
-library(moments)
-
 
 library("tidyverse")
 library("broom")
@@ -69,7 +48,6 @@ W.out <- weightit(isGeneratedByCopliot ~ reviewersTotalCount + reviewersComments
                     additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
                     bodyLength + purpose + repoLanguage + forkCount + stargazerCount + repoAge + isMember ,
                   data = model_data, estimand = "ATT", method = "ebal")
-W.out
 summary(W.out)
 bal.tab(W.out,threshold=0.1)
 plot(bal.tab(W.out,threshold=0.1, un = TRUE), abs = TRUE)
@@ -83,12 +61,3 @@ PSM_result <- model_data %>%
   tidy()
 
 print(n = 38,PSM_result)
-for(i in 1:nrow(PSM_result)) {
-  term <- as.character(PSM_result[i,'term'])
-  estimate <- round(as.numeric(PSM_result[i,'estimate']), 1)
-  std_error <- round(as.numeric(PSM_result[i,'std.error']), 1)
-  p_value <- format(as.numeric(PSM_result[i,'p.value']), scientific = TRUE, digits = 2)
-  
-  output <- paste(term, "&", estimate, "&", std_error, "&", p_value, "\\")
-  print(output)
-}
