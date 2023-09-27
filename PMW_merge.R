@@ -68,7 +68,7 @@ avg_comparisons(fit,
                   transform = "exp")
 
 PSW_result <- model_data %>%
-  lm(reviewTime ~ isGeneratedByCopliot +  
+  lm(isMerged ~ isGeneratedByCopliot +  
        reviewersTotalCount + reviewersComments + authorComments + commentsTotalCount   +
        additions + deletions + prSize + commitsTotalCount + changedFiles + prExperience +
        bodyLength + purpose + repoLanguage + forkCount + stargazerCount + repoAge + isMember ,
