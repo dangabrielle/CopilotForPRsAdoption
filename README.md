@@ -1,6 +1,5 @@
 # Research Artifact - Generative AI for Pull Request Descriptions: Adoption, Impact, and Developer Interventions
 
-
 This is a research artifact for "**Generative AI for Pull Request Descriptions: Adoption,
 Impact, and Developer Interventions**". The following three research questions were constructed to guide the study.
 
