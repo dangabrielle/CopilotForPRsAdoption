@@ -1,10 +1,10 @@
 library(dplyr)
-
 exper_data <- read.csv("treatment_metrics.csv", header=TRUE, sep=",")
 contr_data <- read.csv("control_metrics.csv", header=TRUE, sep=",")
 
 exper_data['isGeneratedByCopliot'] <- TRUE
 contr_data['isGeneratedByCopliot'] <- FALSE
+
 data <- rbind(exper_data, contr_data)
 
 model_data <- data.frame(data$reviewTime, data$reviewersTotalCount, data$reviewersComments, data$authorComments,
