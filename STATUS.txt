@@ -1,0 +1,7 @@
+This artifact is submitted for consideration of three ACM badges: "Evaluated-Functional", "Evaluated-Reusable", and "Available", for the reasons outlined below:
+
+Evaluated-Functional: The data and results presented in our FSE paper have been reproduced multiple times following the provided instructions in the artifact. Comprehensive documentation and datasets are included, enabling others to replicate our findings.
+
+Evaluated-Reusable: The code is organized into modular Notebook cells, each corresponding to specific sections, tables, and figures in the paper. This structure not only facilitates the reuse of our entire process but also allows for easy modification of individual stages to suit the needs of future studies.
+
+Available: We have made our data and scripts publicly accessible. They are hosted on our GitHub repository and archived in a Zenodo package, ensuring wide availability for community use.

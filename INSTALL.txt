@@ -1,0 +1,23 @@
+Install Conda from https://conda.io/projects/conda/en/latest/user-guide/install/index.html
+
+Create new Conda environment and install required libraries from requirements.txt (not limited to this version, any Python3 will work):
+1. Open a terminal or command prompt.
+2. conda create --name copilot4prs python=3.8.16
+3. conda activate copilot4prs
+4. pip install -r requirements.txt
+
+Once all libraries are installed, a user can verify the correctness of installation by:
+
+Follow these steps to execute the code:
+1. Open a terminal or command prompt.
+2. Launch Jupyter Notebook using the command `jupyter notebook`.
+3. Obtain GitHub access tokens (https://docs.github.com/en/enterprise-server@3.9/authentication/keeping-your-account-and-data-secure/managing-your-personal-access-tokens) and put the token in `./scripts/env/tokens.txt`.
+4. Due https://gist.github.com/idan/325676d192b32f169b032fde2d866c2c#github-next--technical-preview-sunsets, now copilot4prs has became `ghost`. Therefore, replace `'copilot4prs'` to `'ghost'` in `CollectCopilot4prs.ipynb`
+5. In the Jupyter Notebook interface, run `{script_name}.ipynb` in the order of `CollectCopilot4prs.ipynb`, `ParseHistory.ipynb`, and `BuildingResults.ipynb`.
+
+
+To run R scripts, install required package from requirements_for_R_scripts.txt.
+1. Install R 4.3.1 from CRAN (https://cran.r-project.org/).
+2. Open a terminal or command prompt
+3. cd scripts
+4. Rscript `{script_name}.R`
