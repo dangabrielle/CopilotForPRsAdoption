@@ -41,6 +41,7 @@ This artifact provides datasets, scripts, and other relevant material, structure
 * `requirements_for_R_scripts.txt` - required packages for R scripts
 * `STATUS.txt` - targeting ACM badges
 * `INSTALL.txt` - installation process of this artifact
+* `FSE_Copilots_For_PRs.pdf` - a copy of the accepted paper in PDF format
 * `.gitattributes` 
 * `.gitignore`
 
