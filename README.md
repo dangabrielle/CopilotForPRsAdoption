@@ -49,7 +49,7 @@ This artifact provides datasets, scripts, and other relevant material, structure
 The replication package comprises scripts and a dataset, accessible at [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.8387774.svg)](https://doi.org/10.5281/zenodo.8387774) TODO
 
 ## Important Notice
-As of December 15, 2023, GitHub has discontinued the Copilot for PRs feature, converting the copilot4prs bot to a [`ghost`](https://github.com/ghost) account. To replicate the dataset, simply replace `'copilot4prs'` with `'ghost'` in the `CollectCopilot4prs.ipynb` notebook.
+As of December 15, 2023, [GitHub](https://gist.github.com/idan/325676d192b32f169b032fde2d866c2c#github-next--technical-preview-sunsets) has discontinued the Copilot for PRs feature, converting the copilot4prs bot to a [`ghost`](https://github.com/ghost) account. To replicate the dataset, replace `'copilot4prs'` with `'ghost'` in the `CollectCopilot4prs.ipynb` notebook.
 
 ## Environments
 
