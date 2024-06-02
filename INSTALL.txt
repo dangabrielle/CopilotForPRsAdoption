@@ -1,4 +1,11 @@
-Install Git Large File Storage from https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage
+If you use the release in GitHub repository, please install Git Large File Storage from https://docs.github.com/en/repositories/working-with-files/managing-large-files/installing-git-large-file-storage and run the following commands:
+1. git init
+2. git lfs install
+3. git remote add origin https://github.com/NAIST-SE/CopilotForPRsEarlyAdoption
+4. git fetch --tags
+5. git lfs fetch origin <latest tag>
+6. git lfs checkout
+7. git lfs ls-files
 
 Install Conda from https://conda.io/projects/conda/en/latest/user-guide/install/index.html
 
