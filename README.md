@@ -53,7 +53,6 @@ The replication package comprises scripts and a dataset, accessible at [![DOI](h
 As of December 15, 2023, [GitHub](https://gist.github.com/idan/325676d192b32f169b032fde2d866c2c#github-next--technical-preview-sunsets) has discontinued the Copilot for PRs feature, converting the copilot4prs bot to a [`ghost`](https://github.com/ghost) account. To replicate the dataset, replace `'copilot4prs'` with `'ghost'` in the `CollectCopilot4prs.ipynb` notebook.
 
 ## Environments
-
 We concluded specific installation process in `INSTALL.txt`
 - A functional Python environment, compatible with the versions used in the notebooks, with all necessary libraries installed as specified in `requirements.txt`.
 - An R installation, preferably of the same version used for script development, with all required packages installed as indicated in `requirements_for_R_scripts.txt`.
@@ -62,8 +61,11 @@ We concluded specific installation process in `INSTALL.txt`
 - A stable internet connection, especially necessary if scripts involve fetching data from online sources.
 - An operating system (Windows, MacOS, Linux) compatible with the software and tools used.
 
-## Skills
+## Installation and Replication
+Please follow the instructions in `INSTALL.txt` step by step to replicate this study. All necessary data is included in this artifact, allowing you to reproduce all results by running `BuildingResults.ipynb` without the need to prepare the dataset separately.
 
+
+## Skills
 - Proficiency in Python programming, including familiarity with data analysis libraries like Pandas, NumPy, and Matplotlib.
 - Competence in R programming, particularly for statistical analysis, and familiarity with relevant R libraries.
 - Experience with Jupyter Notebooks, including running and modifying notebook cells and interpreting outputs.
@@ -71,6 +73,16 @@ We concluded specific installation process in `INSTALL.txt`
 - Basic knowledge of version control systems, particularly Git, for accessing code repositories like GitHub.
 - Ability to troubleshoot common software installation, library dependencies, and environment configuration issues.
 
+## Citation BibTeX
+```
+@inproceedings{copilotforpr,
+  title={Generative AI for Pull Request Descriptions: Adoption, Impact, and Developer Interventions},
+  author={Xiao, Tao and Hata, Hideaki and Treude, Christoph and Matsumoto, Kenichi},
+  booktitle={Proceedings of the ACM on Software Engineering (PACMSE)},
+    number={FSE 2024},
+  year={2024}
+}
+```
 
 ## Authors
 * [Tao Xiao](https://tao-xiao.github.io/)
