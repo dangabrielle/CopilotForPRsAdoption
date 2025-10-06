@@ -91,8 +91,8 @@ rfc3339-validator==0.1.4
 rfc3986-validator==0.1.1
 rpds-py==0.17.1
 safetensors==0.4.2
-scikit-learn==1.2.2
-scipy==1.10.1
+scikit-learn==1.7.2
+scipy==1.16.2
 Send2Trash==1.8.2
 sentence-transformers==2.3.1
 sentencepiece==0.1.99
